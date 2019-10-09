@@ -1,23 +1,4 @@
 #include "common.h"
-#include <sstream>
-
-using std::hex;
-using std::string;
-using std::stringstream;
-
-string from_hexstring(const string& str)
-{
-    stringstream ss;
-
-    for (auto it = str.begin(); it < str.end(); it += 2) {
-        stringstream sub(string(it, it + 2));
-        unsigned ch;
-        sub >> hex >> ch;
-        ss << uint8_t(ch);
-    }
-
-    return ss.str();
-}
 
 int main(int argc, char const* argv[])
 {

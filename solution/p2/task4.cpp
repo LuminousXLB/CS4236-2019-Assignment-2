@@ -1,20 +1,4 @@
 #include "common.h"
-#include <iomanip>
-#include <sstream>
-
-using std::hex;
-using std::string;
-using std::stringstream;
-string to_hexstring(const string& str)
-{
-    stringstream ss;
-
-    for (uint8_t c : str) {
-        ss << hex << unsigned(c);
-    }
-
-    return ss.str();
-}
 
 int main(int argc, char const* argv[])
 {
