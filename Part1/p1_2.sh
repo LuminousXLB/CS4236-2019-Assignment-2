@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Input file
-PICTURE=../../picture/pic_original.bmp
+PICTURE=./picture/pic_original.bmp
 
 # Output file
 PIC_ECB=pic_ecb.bmp
