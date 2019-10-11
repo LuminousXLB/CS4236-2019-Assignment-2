@@ -6,6 +6,7 @@ import subprocess
 BLOCK_LENGTH = 16
 
 
+# This is a port to the openssl CLI
 def cbc_encrypt(plaintext: bytes, key: bytes, iv: bytes):
     return subprocess.run(
         [
