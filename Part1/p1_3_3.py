@@ -6,18 +6,20 @@ import subprocess
 BLOCK_LENGTH = 16
 
 
-# This is a port to the openssl CLI
 def cbc_encrypt(plaintext: bytes, key: bytes, iv: bytes):
-    return subprocess.run(
+    """ This is a port to the openssl CLI """
+    p = subprocess.Popen(
         [
             'openssl',
             'enc', '-aes-128-cbc',
             '-K', hexlify(key).decode('ascii'),
             '-iv', hexlify(iv).decode('ascii')
-        ],
-        input=plaintext,
-        capture_output=True
-    ).stdout
+        ],        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE
+    )
+    out, _err = p.communicate(input=plaintext)
+
+    return out
 
 
 def xor(bytes1: bytes, bytes2: bytes):
