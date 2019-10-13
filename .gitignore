@@ -1,3 +1,12 @@
+pic_cbc.bmp
+pic_ecb.bmp
+oracle/port
+.vscode/
+p3/port
+p4/port
+
+**/*.out
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -102,7 +111,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-oracle/port
-solution/.vscode/
-solution/p3/port
-solution/p4/port

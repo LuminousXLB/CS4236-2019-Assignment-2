@@ -1,37 +1,41 @@
 #ifndef _CS4236_PROBLEM2_COMMON_BIGNUM_H_
 #define _CS4236_PROBLEM2_COMMON_BIGNUM_H_
 
-#include <iomanip>
 #include <openssl/bn.h>
-#include <sstream>
 #include <stdio.h>
+#include <string.h>
 
-using std::hex;
-using std::string;
-using std::stringstream;
-string to_hexstring(const string& str)
+#define BUFFER_SIZE 4096
+
+int to_hexstring(const char* in, char* out)
 {
-    stringstream ss;
+    size_t length = strlen(in);
 
-    for (uint8_t c : str) {
-        ss << hex << unsigned(c);
+    for (size_t i = 0; i < length; i++) {
+        sprintf(out + 2 * i, "%x", (unsigned)in[i]);
     }
-
-    return ss.str();
+    return 0;
 }
 
-string from_hexstring(const string& str)
+int from_hexstring(const char* in, char* out)
 {
-    stringstream ss;
-
-    for (auto it = str.begin(); it < str.end(); it += 2) {
-        stringstream sub(string(it, it + 2));
-        unsigned ch;
-        sub >> hex >> ch;
-        ss << uint8_t(ch);
+    size_t length = strlen(in);
+    if (length % 2 != 0) {
+        out[0] = '\0';
+        return -1;
     }
 
-    return ss.str();
+    char buf[3];
+    unsigned ch;
+
+    for (size_t i = 0; i < length; i += 2) {
+        strncpy(buf, in + i, 2);
+        sscanf(buf, "%x", &ch);
+        out[i / 2] = ch;
+    }
+
+    out[length / 2] = '\0';
+    return 0;
 }
 
 /* 
