@@ -17,7 +17,7 @@ echo "    (1) Prepare a plaintext file"
 # output the message into the file `$MSG_FILE`
 echo -n $MESSAGE > $MSG_FILE
 
-# hexdump the message
+# show the message
 hexdump -C $MSG_FILE
 
 ################################################################################
