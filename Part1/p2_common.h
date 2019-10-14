@@ -7,6 +7,10 @@
 
 #define BUFFER_SIZE 4096
 
+/*
+ * Encoding translate between hex and ascii
+ */
+
 int to_hexstring(const char* in, char* out)
 {
     size_t length = strlen(in);
@@ -50,6 +54,10 @@ void printBN(const char* msg, BIGNUM* a)
     OPENSSL_free(number_str);
 }
 
+/*
+ * Generate a BIGNUM from a hex string
+ */
+
 BIGNUM* load_hex(const char* hex_string)
 {
     BIGNUM* bn_ptr = BN_new();
@@ -58,7 +66,12 @@ BIGNUM* load_hex(const char* hex_string)
     return bn_ptr;
 }
 
-BIGNUM* with_ctx2(int (*func)(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, BN_CTX* ctx), const BIGNUM* a, const BIGNUM* b, BN_CTX* ctx)
+/*
+ * Call a BIGNUM funtion operating on two big numbers and requiring a context
+ */
+
+BIGNUM* with_ctx2(int (*func)(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, BN_CTX* ctx),
+    const BIGNUM* a, const BIGNUM* b, BN_CTX* ctx)
 {
     BIGNUM* result = BN_new();
     func(result, a, b, ctx);
@@ -66,7 +79,12 @@ BIGNUM* with_ctx2(int (*func)(BIGNUM* r, const BIGNUM* a, const BIGNUM* b, BN_CT
     return result;
 }
 
-BIGNUM* with_ctx3(int (*func)(BIGNUM*, const BIGNUM*, const BIGNUM*, const BIGNUM*, BN_CTX*), const BIGNUM* a, const BIGNUM* b, const BIGNUM* c, BN_CTX* ctx)
+/*
+ * Call a BIGNUM funtion operating on three big numbers and requiring a context
+ */
+
+BIGNUM* with_ctx3(int (*func)(BIGNUM*, const BIGNUM*, const BIGNUM*, const BIGNUM*, BN_CTX*),
+    const BIGNUM* a, const BIGNUM* b, const BIGNUM* c, BN_CTX* ctx)
 {
     BIGNUM* result = BN_new();
     func(result, a, b, c, ctx);
