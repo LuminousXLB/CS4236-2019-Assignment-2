@@ -62,7 +62,7 @@ if __name__ == "__main__":
 
     oracle = aes_cbc_oracle(KEY)
 
-    # Challenge Yes
+    print(">>> Challenge Yes")
     padded_yes = pad_block(BLOCK_SIZE, b'Yes')
     yes_response = challenge(oracle, padded_yes, IV1, IV2)
     if yes_response[:BLOCK_SIZE] == CIP:
@@ -70,7 +70,8 @@ if __name__ == "__main__":
     else:
         print("Bob said No")
 
-    # Challenge No
+    print("")
+    print(">>> Challenge No")
     padded_no = pad_block(BLOCK_SIZE, b'No')
     no_response = challenge(oracle, padded_no, IV1, IV2)
 
