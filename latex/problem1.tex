@@ -35,7 +35,7 @@ Apart from that, flag \texttt{-p} can be used to print the iv and key used in th
 For this section, I tried 2 different block ciphers in 3 different modes and a stream cipher.
 Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
 
-\begin{figure}[t!]
+\begin{figure}[tb!]
 \centering
 \includegraphics[width=\columnwidth]{pictures/p1_1.png}
 \caption{
@@ -178,7 +178,7 @@ Therefore, in order to keep the encryption scheme producing different ciphertext
 
 \subsubsection{}
 
-\begin{figure}[t!]
+\begin{figure}[tb!]
 \centering
 \includegraphics[width=\columnwidth]{pictures/p1_3_2.png}
 \caption{
@@ -237,12 +237,7 @@ This is sufficient to distinguish different messages and win the CPA game.
 
 Screenshot of the commands and outputs is as Fig.\ref{fig:p1_3_3}.
 
-Since the message is shorter than a block, we only consider the message and ciphertext with only one block.
-In CBC mode (Fig.\ref{fig:CBC_encryption}), the first block of ciphertext 
-$$c := F_k(IV \oplus m)$$
-Thus knowing IV, we can keep the ciphertext identical by holding $IV \oplus m$ a constant.
-
-\begin{figure}[t!]
+\begin{figure}[tb!]
 \centering
 \includegraphics[width=\columnwidth]{pictures/p1_3_3.png}
 \caption{
@@ -251,6 +246,10 @@ Thus knowing IV, we can keep the ciphertext identical by holding $IV \oplus m$ a
 \label{fig:p1_3_3}
 \end{figure}
 
-To solve this problem, we can keep $IV_1 \oplus m = IV_2 \oplus m'$, where $m$ is \texttt{Yes} or \texttt{No}, $IV_1$ and $IV_2$ are known value. Thus
-$$ m' = m \oplus IV_1 \oplus IV_2 $$
-can be easily constructed. Then we ask Bob to encrypt the $m'$ and check if the response $C$ equals to the ciphertext $C_1$ we already known. If $C = C_1$, $m$ is exactly the message Bob sent just now.
+Note that the two messages are both shorter than a block, so it has to be padded firstly. Let $m$ be the padded message, i.e. $|m|$ is equal to block size.
+
+In CBC mode (Fig.\ref{fig:CBC_encryption}), the first block of ciphertext $$ C_1 := F_k(IV \oplus m) $$
+Hence to solve this problem, we can keep $IV_1 \oplus m = IV_2 \oplus P_2$, where $m$ is padded \texttt{Yes} or \texttt{No} and $IV_1$ and $IV_2$ are known value. (I choose $m$ = \texttt{Yes} for description here. In the code, I did both.) Thus $$ P_2 := m \oplus IV_1 \oplus IV_2 $$ can be easily constructed. 
+
+Then we ask Bob to encrypt the $P_2$. From the description above, it is clear that $|P_2|$ is equal to the block size. Thus Bob will add another padding block after $P_2$ and return a ciphertext $C_2$ of two blocks.
+Finally, check if the first block of the ciphertext $C_2$ equals to the ciphertext $C_1$ we already known. If $C = C_1$, Bob sent \texttt{Yes} just now. Otherwise it should be \texttt{No}.
