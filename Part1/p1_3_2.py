@@ -3,6 +3,7 @@ from binascii import hexlify, unhexlify
 
 
 def xor(bytes1: bytes, bytes2: bytes):
+    """ bitwise XOR bytes1 with bytes2 """
     return bytes([b1 ^ b2 for (b1, b2) in zip(bytes1, bytes2)])
 
 
