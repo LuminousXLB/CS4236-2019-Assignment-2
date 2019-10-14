@@ -58,14 +58,14 @@
 
 % *** CITATION PACKAGES ***
 %
-\ifCLASSOPTIONcompsoc
-  % The IEEE Computer Society needs nocompress option
-  % requires cite.sty v4.0 or later (November 2003)
-  \usepackage[nocompress]{cite}
-\else
-  % normal IEEE
-  \usepackage{cite}
-\fi
+% \ifCLASSOPTIONcompsoc
+%   % The IEEE Computer Society needs nocompress option
+%   % requires cite.sty v4.0 or later (November 2003)
+%   \usepackage[nocompress]{cite}
+% \else
+%   % normal IEEE
+%   \usepackage{cite}
+% \fi
 % cite.sty was written by Donald Arseneau
 % V1.6 and later of IEEEtran pre-defines the format of the cite.sty package
 % \cite{} output to follow that of the IEEE. Loading the cite package will
@@ -90,6 +90,7 @@
 % and later.
 
 
+\usepackage{enumitem} 
 
 
 
@@ -156,28 +157,6 @@
 
 
 
-% *** SPECIALIZED LIST PACKAGES ***
-%\usepackage{acronym}
-% acronym.sty was written by Tobias Oetiker. This package provides tools for
-% managing documents with large numbers of acronyms. (You don't *have* to
-% use this package - unless you have a lot of acronyms, you may feel that
-% such package management of them is bit of an overkill.)
-% Do note that the acronym environment (which lists acronyms) will have a
-% problem when used under IEEEtran.cls because acronym.sty relies on the
-% description list environment - which IEEEtran.cls has customized for
-% producing IEEE style lists. A workaround is to declared the longest
-% label width via the IEEEtran.cls \IEEEiedlistdecl global control:
-%
-% \renewcommand{\IEEEiedlistdecl}{\IEEEsetlabelwidth{SONET}}
-% \begin{acronym}
-%
-% \end{acronym}
-% \renewcommand{\IEEEiedlistdecl}{\relax}% remember to reset \IEEEiedlistdecl
-%
-% instead of using the acronym environment's optional argument.
-% The latest version and documentation can be obtained at:
-% http://www.ctan.org/pkg/acronym
-
 \usepackage{algorithm}
 \usepackage{algorithmic}
 % algorithmic.sty was written by Peter Williams and Rogerio Brito.
@@ -197,152 +176,6 @@
 
 
 
-% *** ALIGNMENT PACKAGES ***
-%
-%\usepackage{array}
-% Frank Mittelbach's and David Carlisle's array.sty patches and improves
-% the standard LaTeX2e array and tabular environments to provide better
-% appearance and additional user controls. As the default LaTeX2e table
-% generation code is lacking to the point of almost being broken with
-% respect to the quality of the end results, all users are strongly
-% advised to use an enhanced (at the very least that provided by array.sty)
-% set of table tools. array.sty is already installed on most systems. The
-% latest version and documentation can be obtained at:
-% http://www.ctan.org/pkg/array
-
-
-%\usepackage{mdwmath}
-%\usepackage{mdwtab}
-% Also highly recommended is Mark Wooding's extremely powerful MDW tools,
-% especially mdwmath.sty and mdwtab.sty which are used to format equations
-% and tables, respectively. The MDWtools set is already installed on most
-% LaTeX systems. The lastest version and documentation is available at:
-% http://www.ctan.org/pkg/mdwtools
-
-
-% IEEEtran contains the IEEEeqnarray family of commands that can be used to
-% generate multiline equations as well as matrices, tables, etc., of high
-% quality.
-
-
-%\usepackage{eqparbox}
-% Also of notable interest is Scott Pakin's eqparbox package for creating
-% (automatically sized) equal width boxes - aka "natural width parboxes".
-% Available at:
-% http://www.ctan.org/pkg/eqparbox
-
-
-
-
-% *** SUBFIGURE PACKAGES ***
-%\ifCLASSOPTIONcompsoc
-%  \usepackage[caption=false,font=footnotesize,labelfont=sf,textfont=sf]{subfig}
-%\else
-%  \usepackage[caption=false,font=footnotesize]{subfig}
-%\fi
-% subfig.sty, written by Steven Douglas Cochran, is the modern replacement
-% for subfigure.sty, the latter of which is no longer maintained and is
-% incompatible with some LaTeX packages including fixltx2e. However,
-% subfig.sty requires and automatically loads Axel Sommerfeldt's caption.sty
-% which will override IEEEtran.cls' handling of captions and this will result
-% in non-IEEE style figure/table captions. To prevent this problem, be sure
-% and invoke subfig.sty's "caption=false" package option (available since
-% subfig.sty version 1.3, 2005/06/28) as this is will preserve IEEEtran.cls
-% handling of captions.
-% Note that the Computer Society format requires a sans serif font rather
-% than the serif font used in traditional IEEE formatting and thus the need
-% to invoke different subfig.sty package options depending on whether
-% compsoc mode has been enabled.
-%
-% The latest version and documentation of subfig.sty can be obtained at:
-% http://www.ctan.org/pkg/subfig
-
-
-
-
-% *** FLOAT PACKAGES ***
-%
-%\usepackage{fixltx2e}
-% fixltx2e, the successor to the earlier fix2col.sty, was written by
-% Frank Mittelbach and David Carlisle. This package corrects a few problems
-% in the LaTeX2e kernel, the most notable of which is that in current
-% LaTeX2e releases, the ordering of single and double column floats is not
-% guaranteed to be preserved. Thus, an unpatched LaTeX2e can allow a
-% single column figure to be placed prior to an earlier double column
-% figure.
-% Be aware that LaTeX2e kernels dated 2015 and later have fixltx2e.sty's
-% corrections already built into the system in which case a warning will
-% be issued if an attempt is made to load fixltx2e.sty as it is no longer
-% needed.
-% The latest version and documentation can be found at:
-% http://www.ctan.org/pkg/fixltx2e
-
-
-%\usepackage{stfloats}
-% stfloats.sty was written by Sigitas Tolusis. This package gives LaTeX2e
-% the ability to do double column floats at the bottom of the page as well
-% as the top. (e.g., "\begin{figure*}[!b]" is not normally possible in
-% LaTeX2e). It also provides a command:
-%\fnbelowfloat
-% to enable the placement of footnotes below bottom floats (the standard
-% LaTeX2e kernel puts them above bottom floats). This is an invasive package
-% which rewrites many portions of the LaTeX2e float routines. It may not work
-% with other packages that modify the LaTeX2e float routines. The latest
-% version and documentation can be obtained at:
-% http://www.ctan.org/pkg/stfloats
-% Do not use the stfloats baselinefloat ability as the IEEE does not allow
-% \baselineskip to stretch. Authors submitting work to the IEEE should note
-% that the IEEE rarely uses double column equations and that authors should try
-% to avoid such use. Do not be tempted to use the cuted.sty or midfloat.sty
-% packages (also by Sigitas Tolusis) as the IEEE does not format its papers in
-% such ways.
-% Do not attempt to use stfloats with fixltx2e as they are incompatible.
-% Instead, use Morten Hogholm'a dblfloatfix which combines the features
-% of both fixltx2e and stfloats:
-%
-% \usepackage{dblfloatfix}
-% The latest version can be found at:
-% http://www.ctan.org/pkg/dblfloatfix
-
-
-%\ifCLASSOPTIONcaptionsoff
-%  \usepackage[nomarkers]{endfloat}
-% \let\MYoriglatexcaption\caption
-% \renewcommand{\caption}[2][\relax]{\MYoriglatexcaption[#2]{#2}}
-%\fi
-% endfloat.sty was written by James Darrell McCauley, Jeff Goldberg and 
-% Axel Sommerfeldt. This package may be useful when used in conjunction with 
-% IEEEtran.cls'  captionsoff option. Some IEEE journals/societies require that
-% submissions have lists of figures/tables at the end of the paper and that
-% figures/tables without any captions are placed on a page by themselves at
-% the end of the document. If needed, the draftcls IEEEtran class option or
-% \CLASSINPUTbaselinestretch interface can be used to increase the line
-% spacing as well. Be sure and use the nomarkers option of endfloat to
-% prevent endfloat from "marking" where the figures would have been placed
-% in the text. The two hack lines of code above are a slight modification of
-% that suggested by in the endfloat docs (section 8.4.1) to ensure that
-% the full captions always appear in the list of figures/tables - even if
-% the user used the short optional argument of \caption[]{}.
-% IEEE papers do not typically make use of \caption[]'s optional argument,
-% so this should not be an issue. A similar trick can be used to disable
-% captions of packages such as subfig.sty that lack options to turn off
-% the subcaptions:
-% For subfig.sty:
-% \let\MYorigsubfloat\subfloat
-% \renewcommand{\subfloat}[2][\relax]{\MYorigsubfloat[]{#2}}
-% However, the above trick will not work if both optional arguments of
-% the \subfloat command are used. Furthermore, there needs to be a
-% description of each subfigure *somewhere* and endfloat does not add
-% subfigure captions to its list of figures. Thus, the best approach is to
-% avoid the use of subfigure captions (many IEEE journals avoid them anyway)
-% and instead reference/explain all the subfigures within the main caption.
-% The latest version of endfloat.sty and its documentation can obtained at:
-% http://www.ctan.org/pkg/endfloat
-%
-% The IEEEtran \ifCLASSOPTIONcaptionsoff conditional can also be used
-% later in the document, say, to conditionally put the References on a 
-% page by themselves.
-
 
 
 
@@ -355,46 +188,6 @@
 % systems. The latest version and documentation can be obtained at:
 % http://www.ctan.org/pkg/url
 % Basically, \url{my_url_here}.
-
-
-% NOTE: PDF thumbnail features are not required in IEEE papers
-%       and their use requires extra complexity and work.
-%\ifCLASSINFOpdf
-%  \usepackage[pdftex]{thumbpdf}
-%\else
-%  \usepackage[dvips]{thumbpdf}
-%\fi
-% thumbpdf.sty and its companion Perl utility were written by Heiko Oberdiek.
-% It allows the user a way to produce PDF documents that contain fancy
-% thumbnail images of each of the pages (which tools like acrobat reader can
-% utilize). This is possible even when using dvi->ps->pdf workflow if the
-% correct thumbpdf driver options are used. thumbpdf.sty incorporates the
-% file containing the PDF thumbnail information (filename.tpm is used with
-% dvips, filename.tpt is used with pdftex, where filename is the base name of
-% your tex document) into the final ps or pdf output document. An external
-% utility, the thumbpdf *Perl script* is needed to make these .tpm or .tpt
-% thumbnail files from a .ps or .pdf version of the document (which obviously
-% does not yet contain pdf thumbnails). Thus, one does a:
-% 
-% thumbpdf filename.pdf 
-%
-% to make a filename.tpt, and:
-%
-% thumbpdf --mode dvips filename.ps
-%
-% to make a filename.tpm which will then be loaded into the document by
-% thumbpdf.sty the NEXT time the document is compiled (by pdflatex or
-% latex->dvips->ps2pdf). Users must be careful to regenerate the .tpt and/or
-% .tpm files if the main document changes and then to recompile the
-% document to incorporate the revised thumbnails to ensure that thumbnails
-% match the actual pages. It is easy to forget to do this!
-% 
-% Unix systems come with a Perl interpreter. However, MS Windows users
-% will usually have to install a Perl interpreter so that the thumbpdf
-% script can be run. The Ghostscript PS/PDF interpreter is also required.
-% See the thumbpdf docs for details. The latest version and documentation
-% can be obtained at.
-% http://www.ctan.org/pkg/thumbpdf
 
 
 % NOTE: PDF hyperlink and bookmark features are not required in IEEE
@@ -413,7 +206,7 @@
     urlcolor={black},
     pdftitle={A0209166A},%<!CHANGE!
 % pdfsubject={Cryptography},%<!CHANGE!
-% pdfauthor={SHEN Jiamin},%<!CHANGE!
+    pdfauthor={SHEN Jiamin},%<!CHANGE!
 % pdfkeywords={}
 }%<^!CHANGE!
 %\ifCLASSINFOpdf
@@ -463,21 +256,18 @@
 
 
 \usepackage{minted}
-
-
-
 % *** Do not adjust lengths that control margins, column widths, etc. ***
 % *** Do not use packages that alter fonts (such as pslatex).         ***
 % There should be no need to do such things with IEEEtran.cls V1.6 and later.
 % (Unless specifically asked to do so by the journal or conference you plan
 % to submit to, of course. )
 
-
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
 
 
 \begin{document}
+
 %
 % paper title
 % Titles are generally capitalized except for words such as a, an, and, as,
@@ -500,40 +290,11 @@
 % make the title area
 \maketitle
 
-\input{part1}
+\input{problem1}
 
-\input{part2}
+\input{problem2}
 
 \input{appendix}
-
-% \section{Conclusion}
-% The conclusion goes \cite{IEEEhowto:kopka} here.
-
-
-
-
-
-% references section
-
-% can use a bibliography generated by BibTeX as a .bbl file
-% BibTeX documentation can be easily obtained at:
-% http://mirror.ctan.org/biblio/bibtex/contrib/doc/
-% The IEEEtran BibTeX style support page is at:
-% http://www.michaelshell.org/tex/ieeetran/bibtex/
-% \bibliographystyle{IEEEtran}
-% argument is your BibTeX string definitions and bibliography database(s)
-%\bibliography{IEEEabrv,../bib/paper}
-%
-% <OR> manually copy in the resultant .bbl file
-% set second argument of \begin to the number of references
-% (used to reserve space for the reference number labels box)
-% \begin{thebibliography}{1}
-
-% \bibitem{IEEEhowto:kopka}
-% H.~Kopka and P.~W. Daly, \emph{A Guide to {\LaTeX}}, 3rd~ed.\hskip 1em plus
-%   0.5em minus 0.4em\relax Harlow, England: Addison-Wesley, 1999.
-
-% \end{thebibliography}
 
 
 \end{document}

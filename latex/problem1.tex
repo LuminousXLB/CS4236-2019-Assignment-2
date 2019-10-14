@@ -3,49 +3,78 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Encryption using Different Ciphers and Modes}
 
-For this section, I used 3 different ciphers in different modes. 
-They are
-\begin{enumerate}
-    \item Block cipher AES in CFB mode, where key length is 256.
-    \item Block cipher SM4 in CTR mode.
-    \item Stream cipher RC4.
-\end{enumerate}%
-
-Commands used is screenshot as Fig.\ref{fig:p1_1}:
+For this section, I tried 2 different block ciphers in 3 different modes and another stream cipher.
+Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
 
 \begin{figure}[hb]
 \centering
-\includegraphics[width=\columnwidth]{resources/p1_1.png}
+\includegraphics[width=\columnwidth]{pictures/p1_1.png}
 \caption{
     Content in file \texttt{Part1/p1\_1.sh} is listed in Appendix \ref{code:1_1}
 }
 \label{fig:p1_1}
 \end{figure}
 
+\begin{enumerate}[label=(\arabic*)]
+\item {
+    \textbf{Output a string \texttt{Hello, world} into a file.} 
+    The file will be encrypted later.
+}
+\item {
+    \textbf{Encrypt and decrypt the file using AES block cipher in CBC mode using a key of 128 bits.} 
+    In this part, I used the key and IV given.
+    \begin{center}
+        \texttt{Key = 00112233445566778889aabbccddeeff} \\
+        \texttt{IV  = 0102030405060708}
+    \end{center}
+    Note that her IV has only 64 bits, but AES requires an IV of 128 bits. So there's a warning and the IV was padded with \texttt{0}. 
+    Also Note that in CBC mode encryption, the length of ciphertext is an integer multiple of the block size. This is because, in CBC mode, the message was firstly padded and then encrypted.
+}
+\item {
+    \textbf{Encrypt and decrypt the file using AES block cipher in CFB mode using a key of 128 bits. }
+    In this part, I used the same key, but an IV of 128 bits to suppress the warning.
+    \begin{center}
+        \texttt{IV  = 01020304050607080102030405060708}
+    \end{center}
+    Note that in CFB mode, the length of ciphertext is the same as that of the message. This is because in CFB mode, a random stream is generated and XORed with the message, so there's no need to pad the message.   
+}
+\item {
+    \textbf{Encrypt and decrypt the file using SM4 block cipher in CTR mode.}
+    SM4 only supports keys of 128 bits, so key length is not stated in the name of the cipher.
+    In CTR mode, the length of ciphertext is also the same as that of the message.
+}
+\item {
+    \textbf{Encrypt and decrypt the file using RC4 stream cipher.}
+    SM4 should support a variable range of key length, but for some reasons, it only supports keys of 128 bits in OpenSSL.
+    Note that IV is not required in RC4, so it should be a deterministic encryption scheme. Then I tried encrypting the same message twice using the same key, and two identical ciphertext was produced. Hence it is deterministic indeed.
+    The length of ciphertext of RC4 is also the same as that of the message.
+}
+\end{enumerate}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Encryption Mode – ECB vs. CBC}
 
-\begin{figure}[t!]
+\begin{figure}[tb!]
 \centering
-\includegraphics[width=\columnwidth]{resources/pic_original.pdf}
+\includegraphics[width=\columnwidth]{pictures/pic_original.pdf}
 \caption{
     The original picture
 }
 \label{fig:pic_original}
 \end{figure}
 
-\begin{figure}[t!]
+\begin{figure}[tb!]
 \centering
-\includegraphics[width=\columnwidth]{resources/pic_ecb.pdf}
+\includegraphics[width=\columnwidth]{pictures/pic_ecb.pdf}
 \caption{
     The picture encrypted in ECB mode.
 }
 \label{fig:pic_ecb}
 \end{figure}
 
-\begin{figure}[t!]
+\begin{figure}[tb!]
 \centering
-\includegraphics[width=\columnwidth]{resources/pic_cbc.pdf}
+\includegraphics[width=\columnwidth]{pictures/pic_cbc.pdf}
 \caption{
     The picture encrypted in CBC mode.
 }
@@ -70,7 +99,7 @@ Screenshot of the commands and outputs is as Fig.\ref{fig:p1_3_1}.
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width=\columnwidth]{resources/p1_3_1.png}
+\includegraphics[width=\columnwidth]{pictures/p1_3_1.png}
 \caption{
     Content in file \texttt{Part1/p1\_3\_1.sh} is listed in Appendix \ref{code:1_3_1}
 }
@@ -91,7 +120,7 @@ Yes, he/she can decrypt other messages that are not longer than the known messag
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width=\columnwidth]{resources/p1_3_2.png}
+\includegraphics[width=\columnwidth]{pictures/p1_3_2.png}
 \caption{
     Content in file \texttt{Part1/p1\_3\_2.sh} is listed in Appendix \ref{code:1_3_2}
 }
@@ -102,7 +131,7 @@ If we use CFB mode (Fig.\ref{fig:CFB_encryption}) instead of OFB mode, we can on
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\columnwidth]{resources/CFB_encryption.png}
+\includegraphics[width=\columnwidth]{pictures/CFB_encryption.png}
 \caption{
     Cipher Feedback (CFB) mode encryption \protect\footnotemark
 }
@@ -128,7 +157,7 @@ Thus knowing IV, we can keep the ciphertext identical by holding $IV \oplus m$ a
 
 \begin{figure}[t!]
 \centering
-\includegraphics[width=\columnwidth]{resources/p1_3_3.png}
+\includegraphics[width=\columnwidth]{pictures/p1_3_3.png}
 \caption{
     Content in file \texttt{Part1/p1\_3\_3.sh} is listed in Appendix \ref{code:1_3_3}
 }
@@ -137,7 +166,7 @@ Thus knowing IV, we can keep the ciphertext identical by holding $IV \oplus m$ a
 
 \begin{figure}[ht]
 \centering
-\includegraphics[width=\columnwidth]{resources/CBC_encryption.png}
+\includegraphics[width=\columnwidth]{pictures/CBC_encryption.png}
 \caption{
     Cipher Block Chaining (CBC) mode encryption \protect\footnotemark
 }
