@@ -3,10 +3,39 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Encryption using Different Ciphers and Modes}
 
-For this section, I tried 2 different block ciphers in 3 different modes and another stream cipher.
+OpenSSL supports some different ciphers in module \texttt{enc}.
+It can be used as 
+\begin{verbatim}
+    $ openssl enc <cipher-type> <arguments>
+\end{verbatim}
+where supported \texttt{<cipher-type>} can be found in 
+\begin{verbatim}
+    $ openssl enc -ciphers
+\end{verbatim}
+
+Arguments have different functions. 
+To encrypt or decrypt a message, a flag should be added to declare the direction.
+\begin{verbatim}
+    -e                  Encrypt
+    -d                  Decrypt
+\end{verbatim}
+To perform encryption or decryption, key and IV (or a passphrase) are required. These are declared by 
+\begin{verbatim}
+    -k val              Passphrase
+    -K val              Raw key, in hex
+    -iv val             IV in hex
+\end{verbatim}
+To read input from or write output to a file, filenames should be declared by 
+\begin{verbatim}
+    -in infile          Input file
+    -out outfile        Output file
+\end{verbatim}
+Apart from that, flag \texttt{-p} can be used to print the iv and key used in the encryption or decryption.
+
+For this section, I tried 2 different block ciphers in 3 different modes and a stream cipher.
 Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
 
-\begin{figure}[hb]
+\begin{figure}[t!]
 \centering
 \includegraphics[width=\columnwidth]{pictures/p1_1.png}
 \caption{
@@ -21,7 +50,7 @@ Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
     The file will be encrypted later.
 }
 \item {
-    \textbf{Encrypt and decrypt the file using AES block cipher in CBC mode using a key of 128 bits.} 
+    \textbf{Encrypt and decrypt the file using AES block cipher in CBC mode with a key of 128 bits.} 
     In this part, I used the key and IV given.
     \begin{center}
         \texttt{Key = 00112233445566778889aabbccddeeff} \\
@@ -31,7 +60,7 @@ Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
     Also Note that in CBC mode encryption, the length of ciphertext is an integer multiple of the block size. This is because, in CBC mode, the message was firstly padded and then encrypted.
 }
 \item {
-    \textbf{Encrypt and decrypt the file using AES block cipher in CFB mode using a key of 128 bits. }
+    \textbf{Encrypt and decrypt the file using AES block cipher in CFB mode with a key of 128 bits. }
     In this part, I used the same key, but an IV of 128 bits to suppress the warning.
     \begin{center}
         \texttt{IV  = 01020304050607080102030405060708}
@@ -44,8 +73,7 @@ Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
     In CTR mode, the length of ciphertext is also the same as that of the message.
 }
 \item {
-    \textbf{Encrypt and decrypt the file using RC4 stream cipher.}
-    SM4 should support a variable range of key length, but for some reasons, it only supports keys of 128 bits in OpenSSL.
+    \textbf{Encrypt and decrypt the file using RC4 stream cipher with a key of 128 bits.}
     Note that IV is not required in RC4, so it should be a deterministic encryption scheme. Then I tried encrypting the same message twice using the same key, and two identical ciphertext was produced. Hence it is deterministic indeed.
     The length of ciphertext of RC4 is also the same as that of the message.
 }
