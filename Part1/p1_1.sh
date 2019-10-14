@@ -62,6 +62,8 @@ hexdump -C $DEC_FILE
 
 ################################################################################
 echo "    (5) Encrypt and decrypt a file using RC4"
+# In this part, I encrypted the message twice using the same key, in order to
+# confirm that RC4 is a deterministic encryption scheme.
 ################################################################################
 
 echo ">>> ENCRYPT"
