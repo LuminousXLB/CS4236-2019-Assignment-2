@@ -153,7 +153,7 @@ The two examples also show that block cipher in CBC mode has a better property o
 
 \subsubsection{}
 
-Screenshot of the commands and outputs is as Fig.\ref{fig:p1_3_1}.
+AES-128-CBC is used for this section. Screenshot of the commands and outputs is as Fig.\ref{fig:p1_3_1}.
 
 \begin{figure}[tb!]
 \centering
@@ -164,14 +164,17 @@ Screenshot of the commands and outputs is as Fig.\ref{fig:p1_3_1}.
 \label{fig:p1_3_1}
 \end{figure}
 
-From the outputs, it can be seen that reusing IV under the same key to encrypt the same message leads to the same ciphertext.
+\textbf{Observation.}
+From the outputs, it can be seen that when encrypting the same message under the same key, different ciphertext are produced with different IVs, while reusing IV leads to the same ciphertext.
 
-CPA-security requires that the encryption scheme should be probabilistic. 
+\textbf{Explanation.}
+CPA-security requires that the encryption scheme must be probabilistic. 
 A probabilistic function has to be able to get access to a randomness source.
-In the encryption schemes we used, IV is the only source of randomness.
-Hence if we reuse the IV, the probabilistic function falls back to a deterministic function.
 
-Therefore, in order to keep the encryption scheme produces different ciphertext for the same plaintext, IV can never be reused.
+In the block cipher working in most modes of operation, IV (or counter in CTR mode) is the only source of randomness.
+Hence if we reuse the IV (or even the IV can be predicated in CBC mode), the probabilistic function falls back to a deterministic function in the $\mathsf{PrivK}^{\mathsf{cpa}}$ game.
+
+Therefore, in order to keep the encryption scheme producing different ciphertext for the same plaintext, IV can never be reused.
 
 \subsubsection{}
 Yes, he/she can decrypt other messages that are not longer than the known message. Screenshot of the commands and outputs is as Fig.\ref{fig:p1_3_2}.
