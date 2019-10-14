@@ -8,7 +8,7 @@ PIC_ECB=pic_ecb.bmp
 PIC_CBC=pic_cbc.bmp
 
 ################################################################################
-echo "(1) Encrypt the picture using AES-128-ECB"
+echo "    (1) Encrypt the picture using AES-128-ECB"
 ################################################################################
 
 head -c 54 $PICTURE > $PIC_ECB
@@ -18,7 +18,7 @@ openssl enc -aes-128-ecb \
     -in $PICTURE | tail -c +55 >> $PIC_ECB
 
 ################################################################################
-echo "(2) Encrypt the picture using AES-128-CBC"
+echo "    (2) Encrypt the picture using AES-128-CBC"
 ################################################################################
 
 head -c 54 $PICTURE > $PIC_CBC
