@@ -65,7 +65,7 @@ Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
     \begin{center}
         \texttt{IV  = 01020304050607080102030405060708}
     \end{center}
-    Note that in CFB mode, the length of ciphertext is the same as that of the message. This is because in CFB mode, a random stream is generated and XORed with the message, so there's no need to pad the message.   
+    Note that in CFB mode, the length of ciphertext is the same as that of the message. This is because in CFB mode, a random stream is generated and XOR-ed with the message, so there's no need to pad the message.   
 }
 \item {
     \textbf{Encrypt and decrypt the file using SM4 block cipher in CTR mode.}
@@ -177,7 +177,6 @@ Hence if we reuse the IV (or even the IV can be predicated in CBC mode), the pro
 Therefore, in order to keep the encryption scheme producing different ciphertext for the same plaintext, IV can never be reused.
 
 \subsubsection{}
-Yes, he/she can decrypt other messages that are not longer than the known message. Screenshot of the commands and outputs is as Fig.\ref{fig:p1_3_2}.
 
 \begin{figure}[t!]
 \centering
@@ -188,6 +187,34 @@ Yes, he/she can decrypt other messages that are not longer than the known messag
 \label{fig:p1_3_2}
 \end{figure}
 
+\textbf{In OFB mode.}
+Yes, he/she can decrypt other messages that are not longer than the known message (\texttt{P1} in this problem). Screenshot of the commands and outputs is as Fig.\ref{fig:p1_3_2}.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\columnwidth]{pictures/OFB_encryption.png}
+\caption{
+    Output Feedback (OFB) mode encryption
+}
+\label{fig:OFB_encryption}
+\end{figure}
+
+OFB mode (Fig.\ref{fig:OFB_encryption}) generates a random stream from IV, and XOR-s the plaintext with the random stream generated. 
+This can be stated as $$ c := G(IV) \oplus m $$ where pseudorandom generator $G$ is defined as $$
+G_\infty(IV) := F_k(IV) || F_k(F_k(IV)) || \ldots
+$$
+
+Note that $G$ is a deterministic function. Thus when $G$ gets two inputs that are the same, it will produce two identical pseudorandom streams. That's to say $G(IV)$ becomes a constant value.
+
+Since we already have a pair of plaintext $P_1$ and ciphertext $C_1$, we can calculate the first $|P_1|$ bytes of the random stream $R$ as $$
+    R := P_1 \oplus C_1
+$$ where $|R| = |P_1| = |C_1|$. Hence we can decrypt any ciphertext $C'$ where $|C'| \leq |R|$ by XOR-ing $C'$ with the first $|C'|$ bytes of $R$.
+
+In this problem, $|C_1| = |C_2|$. So we can calculate $$
+    P_2 = R \oplus C_2 = P_1 \oplus C_1 \oplus C_2
+$$ directly.
+
+\textbf{In CFB mode.}
 If we use CFB mode (Fig.\ref{fig:CFB_encryption}) instead of OFB mode, we can only get the first block of a new message.
 
 \begin{figure}[ht]
@@ -199,13 +226,12 @@ If we use CFB mode (Fig.\ref{fig:CFB_encryption}) instead of OFB mode, we can on
 \label{fig:CFB_encryption}
 \end{figure}
 
+While in OFB mode, the random stream is generated not only from the IV, but also influenced by the previous block of message. 
+Hence although the IV and the key are the same, it can generate different random stream from different messages.
 
-
-With CFB mode, we can decrypt any message no longer than the known message because CFB generates a completely the same random stream with the same IV and xor the random stream with plaintext.
-
-While in OFB mode, the random stream is generated not only from the IV, but also influenced by the previous block of message. Hence although the IV and the key are the same, it can generate different random stream from different messages.
-
-But we can still get the first block of message because $m_0 \oplus c_0$ always equals to $F_k(IV)$. This is sufficient to win the CPA game.
+But we can still get the first block of message because $m_0 \oplus c_0$ always equals to $F_k(IV)$ where $m_0$ and $c_0$ are the first block of plaintext and ciphertext respectively. 
+Thus adversary can calculate $F_k(IV)$ from any pair of plaintext and ciphertext, and then XOR the $F_k(IV)$ with the first block of ciphertext to reveal the first block of message.
+This is sufficient to distinguish different messages and win the CPA game.
 
 \subsubsection{}
 
