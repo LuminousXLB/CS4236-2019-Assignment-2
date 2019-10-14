@@ -111,7 +111,4 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-latex/__latexindent_temp.tex
-latex/__latexindent_temp.fdb_latexmk
-latex/__latexindent_temp.aux
-latex/__latexindent_temp.fls
+latex/__latexindent*
