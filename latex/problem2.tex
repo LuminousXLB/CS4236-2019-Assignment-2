@@ -4,14 +4,75 @@ Note: all codes in this section include a common header file, \texttt{Part1/p2\_
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % \subsection{Background}
-% \subsection{BIGNUM APIs}
-\setcounter{subsection}{2}
+\setcounter{subsection}{1}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\subsection{BIGNUM APIs}
+
+For the following sections, I used these API.\footnote{This part of introduction referred to OpenSSL online documents: \url{https://www.openssl.org/docs/man1.1.1/man3}}
+
+Function \texttt{BN\_new} is used to allocate and initialize a new \texttt{BIGNUM}.
+Function \texttt{BN\_free} is used to free the components of the \texttt{BIGNUM}, and if it was created by \texttt{BN\_new()}, also the structure itself.
+Function \texttt{BN\_dup} creates a new \texttt{BIGNUM} containing the value \texttt{from}.
+\begin{verbatim}
+  BIGNUM *BN_new(void);
+  void BN_free(BIGNUM *a);
+  BIGNUM *BN_dup(const BIGNUM *from);
+\end{verbatim}
+
+Function \texttt{BN\_bn2hex} is used to serialize a \texttt{BIGNUM} into a hex string.
+Function \texttt{BN\_hex2bn} is used to deserialize a hex string into a \texttt{BIGNUM}.
+\begin{verbatim}
+  char *BN_bn2hex(const BIGNUM *a);
+  int BN_hex2bn(BIGNUM **a, 
+                const char *str);
+\end{verbatim}
+
+Function \texttt{BN\_sub\_word} subtracts a \texttt{BIGNUM} by \texttt{w}.
+Function \texttt{BN\_mul} multiplies two \texttt{BIGNUM}s.
+Function \texttt{BN\_mod\_inverse} calculates $a^{-1} \mod{n}$ and return a pointer to the result.
+These three functions are used when calculating the private exponent $d$.
+
+Function \texttt{BN\_mod\_exp} calculates modulus exponent. It is used when encrypting, decypting, signing and verifying.
+\begin{verbatim}
+  int BN_sub_word(BIGNUM *a, BN_ULONG w);
+  int BN_mul(BIGNUM *r, BIGNUM *a, 
+             BIGNUM *b, BN_CTX *ctx);
+  BIGNUM *BN_mod_inverse(BIGNUM *r, 
+                         BIGNUM *a, 
+                         const BIGNUM *n,
+                         BN_CTX *ctx);
+  int BN_mod_exp(BIGNUM *r, BIGNUM *a, 
+                 const BIGNUM *p,
+                 const BIGNUM *m, 
+                 BN_CTX *ctx);
+\end{verbatim}
+
+Some of the above functions requires a \texttt{BN\_CTX}, which is used to storage temporary \texttt{BIGNUM} and to cut down the overhead for allocating and releasing memory.
+Function \texttt{BN\_CTX\_new} is used to allocate and initialize a \texttt{BN\_CTX} structure.
+Function \texttt{BN\_CTX\_free} frees the components of the \texttt{BN\_CTX} and the structure itself.
+\begin{verbatim}
+  BN_CTX *BN_CTX_new(void);
+  void BN_CTX_free(BN_CTX *c);
+\end{verbatim}
+
+For easier use of the functions, some helper functions are written in \texttt{p2\_common.h}, which can be found in Appendix \ref{code:2_common}.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Deriving the Private Key}
 
 The algorithm to derive private exponent $d$ is stated as Algorithm \ref{alg:rsa_pqe_d}.
 Command and output is screenshot as Fig.\ref{fig:p2_3}.
 Code can be found in Appendix \ref{code:2_3}
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\columnwidth]{pictures/p2_3.png}
+\caption{
+    Calculate private key exponent $d$
+}
+\label{fig:p2_3}
+\end{figure}
 
 \begin{algorithm}
 \caption{Calculate private key exponent $d$}
@@ -26,15 +87,6 @@ Code can be found in Appendix \ref{code:2_3}
 \RETURN $ d $
 \end{algorithmic}
 \end{algorithm}
-
-\begin{figure}[t!]
-\centering
-\includegraphics[width=\columnwidth]{pictures/p2_3.png}
-\caption{
-    Calculate private key exponent $d$
-}
-\label{fig:p2_3}
-\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Encrypting a Message}
