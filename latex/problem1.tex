@@ -82,6 +82,8 @@ Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Encryption Mode – ECB vs. CBC}
 
+In this section, a picture is encrypted using AES in ECB mode and in CBC mode. The script used can be found in Appendix \ref{code:1_2}.
+
 \begin{figure}[tb!]
 \centering
 \includegraphics[width=\columnwidth]{pictures/pic_original.pdf}
@@ -109,14 +111,40 @@ Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
 \label{fig:pic_cbc}
 \end{figure}
 
-From the ECB-encrypted picture (Fig.\ref{fig:pic_ecb}), we can clearly see the edges of the graphics.
+\textbf{Observation.}
+From the ECB-encrypted picture (Fig.\ref{fig:pic_ecb}), we can clearly see the edges of the graphics, which is the same as the original picture (Fig.\ref{fig:pic_original}).
 While from the CBC-encrypted picture (Fig.\ref{fig:pic_cbc}), we can hardly find any information.
 
-Using ECB mode merely concatenates the output of the block cipher as the ciphertext. 
-That is, the same blocks of plaintext was mapped to the same ciphertext.
-We don't change the relative position of blocks either. Consequently, the shape information was almost completely preserved. 
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\columnwidth]{pictures/ECB_encryption.png}
+\caption{
+    Electronic Codebook (ECB) mode encryption \protect\footnotemark
+}
+\label{fig:ECB_encryption}
+\end{figure}
 
-In CBC mode, each block of plaintext is firstly XOR-ed with the previous block of ciphertext. Therefore, identical blocks are encoded as different ciphertext. So the shape information was well hidden. 
+\footnotetext{All the pictures showing mode of operation in this paper comes from \url{\texttt{https://bit.ly/1CoRiM0}}}
+
+\textbf{Explanation.}
+In ECB mode (Fig.\ref{fig:ECB_encryption}), blocks of plaintext are encrypted using a block cipher under the same key. 
+Then the blocks of ciphertext are concatenated to be the output.
+Since the keyed block cipher is a deterministic function, the same blocks of plaintext was mapped to the same ciphertext.
+Additionally, the diversity of blocks in the picture was really low.
+Consequently, the colour information, which is based on a series of continuous bytes, was lost; while the shape information, which relies on the difference between several near blocks, was almost completely preserved. 
+
+In CBC mode (Fig.\ref{fig:CBC_encryption}), each block of plaintext is firstly XOR-ed with the previous block of ciphertext. Therefore, although the keyed block cipher is deterministic, identical blocks are XOR-ed with different values and thus encoded as different ciphertext. So the shape information was also well hidden. 
+
+The two examples also show that block cipher in CBC mode has a better property of diffusion than that in ECB mode.
+
+\begin{figure}[ht!]
+\centering
+\includegraphics[width=\columnwidth]{pictures/CBC_encryption.png}
+\caption{
+    Cipher Block Chaining (CBC) mode encryption
+}
+\label{fig:CBC_encryption}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Initialization Vector (IV)}
@@ -161,12 +189,12 @@ If we use CFB mode (Fig.\ref{fig:CFB_encryption}) instead of OFB mode, we can on
 \centering
 \includegraphics[width=\columnwidth]{pictures/CFB_encryption.png}
 \caption{
-    Cipher Feedback (CFB) mode encryption \protect\footnotemark
+    Cipher Feedback (CFB) mode encryption
 }
 \label{fig:CFB_encryption}
 \end{figure}
 
-\footnotetext{The picture comes from \texttt{https://bit.ly/1CoRiM0}}
+
 
 With CFB mode, we can decrypt any message no longer than the known message because CFB generates a completely the same random stream with the same IV and xor the random stream with plaintext.
 
@@ -191,17 +219,6 @@ Thus knowing IV, we can keep the ciphertext identical by holding $IV \oplus m$ a
 }
 \label{fig:p1_3_3}
 \end{figure}
-
-\begin{figure}[ht]
-\centering
-\includegraphics[width=\columnwidth]{pictures/CBC_encryption.png}
-\caption{
-    Cipher Block Chaining (CBC) mode encryption \protect\footnotemark
-}
-\label{fig:CBC_encryption}
-\end{figure}
-
-\footnotetext{The picture comes from \texttt{https://bit.ly/1CoRiM0}}
 
 To solve this problem, we can keep $IV_1 \oplus m = IV_2 \oplus m'$, where $m$ is \texttt{Yes} or \texttt{No}, $IV_1$ and $IV_2$ are known value. Thus
 $$ m' = m \oplus IV_1 \oplus IV_2 $$
