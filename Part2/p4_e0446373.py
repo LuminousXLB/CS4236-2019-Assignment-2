@@ -6,13 +6,30 @@ BLOCK_SIZE = 128 // 8 // 2
 
 
 class DecryptionOracle:
+    """Interface to call the decryption oracle"""
+
     server = ("localhost", 5000)
     template = "dec_oracle,0x{:016x},0x{:016x}\n"
 
     def __init__(self, host: str, port: int):
+        """initialize a decryption oracle caller
+
+        Arguments:
+            host {str} -- oracle socket host
+            port {int} -- oracle socket port
+        """
         self.server = (host, port)
 
     def __call__(self, block0: bytes, block1: bytes) -> bytes:
+        """query the decryption oracle
+
+        Arguments:
+            block0 {bytes} -- the first block of ciphertext (IV)
+            block1 {bytes} -- the second block of ciphertext
+
+        Returns:
+            bytes -- decrypted block
+        """
         assert len(block0) == BLOCK_SIZE
         assert len(block1) == BLOCK_SIZE
 
@@ -26,50 +43,80 @@ class DecryptionOracle:
         return int(r, 16).to_bytes(BLOCK_SIZE, 'big')
 
     def build_message(self, block0: bytes, block1: bytes) -> bytes:
+        """build a socket query message
+        
+        Arguments:
+            block0 {bytes} -- the first block of ciphertext (IV)
+            block1 {bytes} -- the second block of ciphertext
+        
+        Returns:
+            bytes -- encoded socket message
+        """
         return self.template.format(*map(
             lambda b: int.from_bytes(b, 'big'),
             [block0, block1]
         )).encode('ascii')
 
 
-def xor(a, b):
-    assert len(a) == len(b)
-    return bytes([x ^ y for (x, y) in zip(a, b)])
-
-
 class EncryptionOracle:
+    """Encryption Oracle using Decryption Oracle to encrypt messages"""
+
     block_size = 128 // 2 // 8
 
     def __init__(self, block_size: int, decryption_oracle: DecryptionOracle):
+        """initialize an encryption oracle
+
+        Arguments:
+            block_size {int} -- # of bytes in a block
+            decryption_oracle {DecryptionOracle} -- the underlying decryption oracle
+        """
         self.blk_size = block_size
         self.oracle = decryption_oracle
 
-    def __call__(self, message: bytes) -> bytes:
+    def __call__(self, message: bytes) -> [bytes]:
+        """encrypt a message
+
+        Arguments:
+            message {bytes} -- the message to be encrypted
+
+        Returns:
+            [bytes] -- blocks of ciphertext 
+        """
         # partition and pad the message into separate blocks
-        plaintext = self.partition_and_pad(message)
+        p_blocks = self.partition_and_pad(message)
 
         # randomly generate the last cipher block
         # this random values act as an IV
-        ciphertext = [urandom(self.blk_size)]
+        c_blocks = [urandom(self.blk_size)]
 
         # a zero block
         zero = bytes(self.blk_size)
 
         # start at the last one
-        for idx in reversed(range(len(plaintext))):
+        for idx in reversed(range(len(p_blocks))):
             # resp := Dec_k( zero || C_{idx} ) = zero ^ F^{-1}_k( C_{idx} )
             # resp ^ zero = F^{-1}_k( C_{idx} ) = C_{idx-1} ^ P_{idx}
             # C_{idx-1} = resp ^ zero ^ P_{idx} = resp ^ P_{idx}
 
             # query the decryption of [zero || C_{idx}], i.e. F^{-1}_k( C_{idx-1} )
-            resp = self.oracle(zero, ciphertext[0])
-            # insert the previous cipher block
-            ciphertext.insert(0, xor(plaintext[idx], resp))
+            resp = self.oracle(zero, c_blocks[0])
 
-        return ciphertext
+            # insert the previous cipher block
+            prev_cipher = bytes([p ^ r for (p, r) in zip(p_blocks[idx], resp)])
+            c_blocks.insert(0, prev_cipher)
+
+        return c_blocks
 
     @staticmethod
     def partition_and_pad(plaintext: bytes) -> [bytes]:
+        """partition and pad the plaintext to make it into blocks
+
+        Arguments:
+            plaintext {bytes} -- the original message
+
+        Returns:
+            [bytes] -- blocks of plaintext
+        """
         # padding
         pad_len = BLOCK_SIZE - (len(plaintext) % BLOCK_SIZE)
         if pad_len == 0:

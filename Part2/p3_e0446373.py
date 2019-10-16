@@ -5,13 +5,30 @@ BLOCK_SIZE = 128 // 2 // 8
 
 
 class PaddingOracle:
+    """Interface to call the padding oracle"""
+
     server = ("localhost", 5000)
     template = "pad_oracle,0x{:016x},0x{:016x}\n"
 
     def __init__(self, host: str, port: int):
+        """initialize a padding oracle caller
+
+        Arguments:
+            host {str} -- oracle socket host
+            port {int} -- oracle socket port
+        """
         self.server = (host, port)
 
     def __call__(self, block0: bytes, block1: bytes) -> bool:
+        """query the padding oracle
+
+        Arguments:
+            block0 {bytes} -- the first block of ciphertext (IV)
+            block1 {bytes} -- the second block of ciphertext
+
+        Returns:
+            bool -- whether the decrypted message has a valid padding
+        """
         assert len(block0) == BLOCK_SIZE
         assert len(block1) == BLOCK_SIZE
 
@@ -23,6 +40,15 @@ class PaddingOracle:
         return sock.recv(1) == b'1'
 
     def build_message(self, block0: bytes, block1: bytes) -> bytes:
+        """build a socket query message
+
+        Arguments:
+            block0 {bytes} -- the first block of ciphertext (IV)
+            block1 {bytes} -- the second block of ciphertext
+
+        Returns:
+            bytes -- encoded socket message
+        """
         return self.template.format(*map(
             lambda b: int.from_bytes(b, 'big'),
             [block0, block1]
@@ -30,13 +56,30 @@ class PaddingOracle:
 
 
 class PaddingOracleAttack:
+    """Decrypt a block of message through padding oracle attack"""
+
     block_size = 128 // 2 // 8
 
     def __init__(self, block_size: int, padding_oracle: PaddingOracle):
+        """initialize an attack instance
+
+        Arguments:
+            block_size {int} -- # of bytes in a block
+            padding_oracle {PaddingOracle} -- the underlying padding oracle
+        """
         self.blk_size = block_size
         self.oracle = padding_oracle
 
     def __call__(self, init_vector: bytes, cipher_block: bytes) -> bytes:
+        """decrypt a block of message (perform the attack)
+
+        Arguments:
+            init_vector {bytes} -- the first block of ciphertext (IV)
+            cipher_block {bytes} -- the second block of ciphertext
+
+        Returns:
+            bytes -- a block of plaintext
+        """
         assert len(init_vector) == self.blk_size
         assert len(cipher_block) == self.blk_size
 
@@ -65,6 +108,11 @@ class PaddingOracleAttack:
         return bytes(self.p_text[:-self.p_text[-1]])
 
     def probe_padding_length(self) -> int:
+        """probe the padding length by trying modifying bytes one by one
+
+        Returns:
+            int -- padding length
+        """
         c0 = self.c0.copy()
 
         # modify a byte one by on from the first one
@@ -79,6 +127,11 @@ class PaddingOracleAttack:
         return 0
 
     def construct_proceeding_iv(self) -> bytearray:
+        """construct a new IV used to reveal the next byte
+        
+        Returns:
+            bytearray -- newly constructed IV
+        """
         assert len(self.p_text) < self.blk_size
 
         # to reaveal the next unknown byte
@@ -96,6 +149,14 @@ class PaddingOracleAttack:
         return bytearray([c ^ p ^ v for (c, p, v) in zip(self.c0, ptext, pad)])
 
     def fix_padding(self, new_iv: bytearray) -> int:
+        """fix the padding by tuning a byte in the IV
+        
+        Arguments:
+            new_iv {bytearray} -- a new IV that changes bytes to the new padding
+        
+        Returns:
+            int -- the revealed byte
+        """
         pad_len = len(self.p_text) + 1
 
         # the tunable byte is the first byte of the new padding
