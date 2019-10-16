@@ -112,3 +112,7 @@ venv.bak/
 # mypy
 .mypy_cache/
 latex/__latexindent*
+Part2/port
+Part2/oracle/port
+Part2/p3/port
+Part2/test.py
