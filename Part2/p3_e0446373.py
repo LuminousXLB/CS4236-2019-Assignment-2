@@ -128,7 +128,7 @@ class PaddingOracleAttack:
 
     def construct_proceeding_iv(self) -> bytearray:
         """construct a new IV used to reveal the next byte
-        
+
         Returns:
             bytearray -- newly constructed IV
         """
@@ -150,10 +150,10 @@ class PaddingOracleAttack:
 
     def fix_padding(self, new_iv: bytearray) -> int:
         """fix the padding by tuning a byte in the IV
-        
+
         Arguments:
             new_iv {bytearray} -- a new IV that changes bytes to the new padding
-        
+
         Returns:
             int -- the revealed byte
         """
@@ -189,7 +189,7 @@ if __name__ == "__main__":
     HOST = "localhost"
     PORT = 5000
 
-    f = open("oracle/port", "r")
+    f = open("port", "r")
     lines = f.readlines()
     PORT = int(lines[0].strip())
 
