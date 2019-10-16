@@ -1,10 +1,5 @@
-# from oracle_python import pad_oracle, dec_oracle
-# from pathlib import Path
-# import struct
-from binascii import hexlify
 import socket
 import sys
-from collections import Counter
 
 BLOCK_SIZE = 128 // 2 // 8
 
