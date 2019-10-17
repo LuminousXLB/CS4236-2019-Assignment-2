@@ -5,7 +5,7 @@ import subprocess
 
 def aes_cbc_oracle(key):
     def cbc_encrypt(plaintext: bytes, iv: bytes):
-        """ This is a port to the openssl CLI """
+        """ this is a port to the openssl CLI """
         p = subprocess.Popen(
             [
                 'openssl',
@@ -23,11 +23,6 @@ def aes_cbc_oracle(key):
     return cbc_encrypt
 
 
-def xor(bytes1: bytes, bytes2: bytes):
-    """ bitwise XOR bytes1 with bytes2 """
-    return bytes([b1 ^ b2 for (b1, b2) in zip(bytes1, bytes2)])
-
-
 def pad_block(block_size: int, message: bytes):
     """ pad the message using PKCS#7 """
     padding_length = block_size - (len(message) % block_size)
@@ -39,13 +34,14 @@ def pad_block(block_size: int, message: bytes):
     return padded
 
 
-def challenge(oracle: callable, message: bytes, IV1: bytes, IV2: bytes):
+def query(oracle: callable, message: bytes, IV1: bytes, IV2: bytes):
+    """ knowing a IV2, ask the oracle to return the ciphertext for message using IV1 """
     print('INFO message  ', hexlify(message).decode('ascii'))
 
-    challenge = xor(xor(message, IV1), IV2)
-    print('INFO challenge', hexlify(challenge).decode('ascii'))
+    query = bytes([m ^ i ^ v for (m, i, v) in zip(message, IV1, IV2)])
+    print('INFO query    ', hexlify(query).decode('ascii'))
 
-    response = oracle(challenge, IV2)
+    response = oracle(query, IV2)
     print('INFO response ', hexlify(response).decode('ascii'))
 
     return response
@@ -62,18 +58,18 @@ if __name__ == "__main__":
 
     oracle = aes_cbc_oracle(KEY)
 
-    print(">>> Challenge Yes")
+    print(">>> Try `Yes`")
     padded_yes = pad_block(BLOCK_SIZE, b'Yes')
-    yes_response = challenge(oracle, padded_yes, IV1, IV2)
+    yes_response = query(oracle, padded_yes, IV1, IV2)
     if yes_response[:BLOCK_SIZE] == CIP:
         print("Bob said Yes")
     else:
         print("Bob said No")
 
     print("")
-    print(">>> Challenge No")
+    print(">>> Try `No`")
     padded_no = pad_block(BLOCK_SIZE, b'No')
-    no_response = challenge(oracle, padded_no, IV1, IV2)
+    no_response = query(oracle, padded_no, IV1, IV2)
 
     if no_response[:BLOCK_SIZE] == CIP:
         print("Bob said No")
