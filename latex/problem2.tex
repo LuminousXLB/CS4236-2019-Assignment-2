@@ -135,7 +135,7 @@ Code can be found in Appendix \ref{code:2_5}
 \end{algorithmic}
 \end{algorithm}
 
-\begin{figure}[b!]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{pictures/p2_5.png}
 \caption{
@@ -148,13 +148,13 @@ Code can be found in Appendix \ref{code:2_5}
 \subsection{Signing a Message}
 \label{subs:sign}
 
-The algorithm to sign a message $m$ using RSA algorithm is completely the same as RSA decryption (Algorithm \ref{alg:rsa_dec}) which utilize the private key except that the output was called a signature.
+The algorithm to sign a message $m$ using RSA algorithm is completely the same as RSA decryption (Algorithm \ref{alg:rsa_dec}) which utilize the private key except that the output is called a signature.
 Command and output is screenshot as Fig.\ref{fig:p2_6}.
 Code can be found in Appendix \ref{code:2_6}
 
 Note that when I changed \texttt{\$2000} to \texttt{\$3000}, the signature becomes different. Concretely, we changed 1 bit in the message. Then there are 123 different bits (in the total 256 bits) in the two signatures, which is nearly 50\% of all bits.
 
-\begin{figure}[b!]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{pictures/p2_6.png}
 \caption{
@@ -192,7 +192,7 @@ This example and the one in Question \ref{subs:sign} show that there's a great d
 \end{algorithmic}
 \end{algorithm}
 
-\begin{figure}[b!]
+\begin{figure}[!t]
 \centering
 \includegraphics[width=\columnwidth]{pictures/p2_7.png}
 \caption{
