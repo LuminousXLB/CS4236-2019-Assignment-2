@@ -3,7 +3,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection{Encryption using Different Ciphers and Modes}
 
-OpenSSL supports some different ciphers in module \texttt{enc}.\footnote{This part of introduction refered to the output of \texttt{openssl enc -help}.}
+OpenSSL supports some different ciphers in module \texttt{enc}.\footnote{This part of introduction referred to the output of \texttt{openssl enc -help}.}
 It can be used as 
 \begin{verbatim}
     $ openssl enc <cipher-type> <arguments>
@@ -200,11 +200,11 @@ Yes, he/she can decrypt other messages that are not longer than the known messag
 \end{figure}
 
 OFB mode (Fig.\ref{fig:OFB_encryption}) generates a random stream from IV, and XOR-s the plaintext with the random stream generated. 
-This can be stated as $$ c := G(IV) \oplus m $$ where pseudorandom generator $G$ is defined as $$
+This can be stated as $$ c := G(IV) \oplus m $$ where pseudo-random generator $G$ is defined as $$
 G_\infty(IV) := F_k(IV) || F_k(F_k(IV)) || \ldots
 $$
 
-Note that $G$ is a deterministic function. Thus when $G$ gets two inputs that are the same, it will produce two identical pseudorandom streams. That's to say $G(IV)$ becomes a constant value.
+Note that $G$ is a deterministic function. Thus when $G$ gets two inputs that are the same, it will produce two identical pseudo-random streams. That's to say $G(IV)$ becomes a constant value.
 
 Since we already have a pair of plaintext $P_1$ and ciphertext $C_1$, we can calculate the first $|P_1|$ bytes of the random stream $R$ as $$
     R := P_1 \oplus C_1
@@ -246,10 +246,31 @@ Screenshot of the commands and outputs is as Fig.\ref{fig:p1_3_3}.
 \label{fig:p1_3_3}
 \end{figure}
 
-Note that the two messages are both shorter than a block, so it has to be padded firstly. Let $m$ be the padded message, i.e. $|m|$ is equal to block size.
+Note that the two messages are both shorter than a block, so it has to be padded firstly. Assuming that $m$ is the true message that Bob sent, and $PAD(m)$ is the padded $m$. 
+That is, $|PAD(m)|$ is equal to the block size.
 
-In CBC mode (Fig.\ref{fig:CBC_encryption}), the first block of ciphertext $$ C_1 := F_k(IV \oplus m) $$
-Hence to solve this problem, we can keep $IV_1 \oplus m = IV_2 \oplus P_2$, where $m$ is padded \texttt{Yes} or \texttt{No} and $IV_1$ and $IV_2$ are known value. (I choose $m$ = \texttt{Yes} for description here. In the code, I did both.) Thus $$ P_2 := m \oplus IV_1 \oplus IV_2 $$ can be easily constructed. 
+In CBC mode (Fig.\ref{fig:CBC_encryption}), the first block of ciphertext $$ C_1 := F_k(IV \oplus PAD(m)) $$
+So if we keep $IV_1 \oplus PAD(m) = IV_2 \oplus m'$, where $m'$ is exactly one block of message, the first block of ciphertext $\mathrm{Enc}_k(m')$ encrypted using $IV_2$ should be equal $C_1$.
 
-Then we ask Bob to encrypt the $P_2$. From the description above, it is clear that $|P_2|$ is equal to the block size. Thus Bob will add another padding block after $P_2$ and return a ciphertext $C_2$ of two blocks.
-Finally, check if the first block of the ciphertext $C_2$ equals to the ciphertext $C_1$ we already known. If $C = C_1$, Bob sent \texttt{Yes} just now. Otherwise it should be \texttt{No}.
+\begin{align*}
+\mathrm{Enc}_k(m') &= F_k(IV_2 \oplus m') || F_k(F_k(IV_2 \oplus m') \oplus Padding) \\
+&= F_k(IV_1 \oplus PAD(m)) || F_k(\ldots \oplus Padding) \\
+&= C_1 || F_k(C_1 \oplus Padding)
+\end{align*}
+
+Thus we guess $m$ is \texttt{Yes} or \texttt{No}, denoting the guess for $m$ as $\hat{m}$. 
+Following description chooses $\hat{m} = \mathtt{Yes}$. But in the code, I did both.
+
+Construct $P_2$ over $\hat{m} = \mathtt{Yes}$:
+\begin{align*}
+P_2 
+:&= PAD(\hat{m}) \oplus IV_1 \oplus IV_2 \\
+&= \mathtt{5965730d0d0d0d0d0d0d0d0d0d0d0d0d} \\ 
+&  \oplus \mathtt{31323334353637383930313233343536} \\
+&  \oplus \mathtt{31323334353637383930313233343537} \\
+&= \mathtt{5965730d0d0d0d0d0d0d0d0d0d0d0d0c}
+\end{align*}
+Then ask bob to encrypt $P_2$ and return a ciphertext $C_2$.
+According to the analysis above, $C_2$ should have two blocks $C^1_2 || C^2_2$ and if $\hat{m} = m$, there must be $C^1_2 = C_1$.
+
+Thus we check if $C^1_2$ equals to the ciphertext $C_1$ we already known. If $C^1_2 = C_1$, Bob sent \texttt{Yes} just now. Otherwise it should be \texttt{No}.
