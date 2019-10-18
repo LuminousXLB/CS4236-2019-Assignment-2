@@ -70,12 +70,17 @@ class PaddingOracleAttack:
         self.blk_size = block_size
         self.oracle = padding_oracle
 
-    def __call__(self, init_vector: bytes, cipher_block: bytes) -> bytes:
+    def __call__(self, init_vector: bytes, cipher_block: bytes, no_padding=False) -> bytes:
         """decrypt a block of message (perform the attack)
 
         Arguments:
             init_vector {bytes} -- the first block of ciphertext (IV)
             cipher_block {bytes} -- the second block of ciphertext
+
+        Keyword Arguments:
+            no_padding {bool} -- the plaintext wasn't padded (default: {False})
+                                 this can be practical when attacking on 
+                                 multiple blocks of message
 
         Returns:
             bytes -- a block of plaintext
@@ -87,7 +92,7 @@ class PaddingOracleAttack:
         self.c1 = bytearray(cipher_block)
 
         # find the padding length
-        pad_len = self.probe_padding_length()
+        pad_len = 0 if no_padding else self.probe_padding_length()
 
         # save the confirmed plain_text bytes
         self.p_text = bytearray([pad_len]*pad_len)
