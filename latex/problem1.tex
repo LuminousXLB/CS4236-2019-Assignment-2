@@ -30,7 +30,7 @@ To read input from or write output to a file, filenames should be declared by
     -in infile          Input file
     -out outfile        Output file
 \end{verbatim}
-Apart from that, flag \texttt{-p} can be used to print the iv and key used in the encryption or decryption.
+Apart from that, flag \texttt{-p} can be used to print the IV and key used in the encryption or decryption.
 
 For this section, I tried 2 different block ciphers in 3 different modes and a stream cipher.
 Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
@@ -69,7 +69,7 @@ Commands used and the output is screenshot as Fig.\ref{fig:p1_1}:
 }
 \item {
     \textbf{Encrypt and decrypt the file using SM4 block cipher in CTR mode.}
-    SM4 only supports keys of 128 bits, so key length is not stated in the name of the cipher.
+    SM4 only supports keys of 128 bits, so the key length is not stated in the name of the cipher.
     In CTR mode, the length of ciphertext is also the same as that of the message.
 }
 \item {
@@ -112,7 +112,7 @@ In this section, a picture is encrypted using AES in ECB mode and in CBC mode. T
 \end{figure}
 
 \textbf{Observation.}
-From the ECB-encrypted picture (Fig.\ref{fig:pic_ecb}), we can clearly see the edges of the graphics, which is the same as the original picture (Fig.\ref{fig:pic_original}).
+From the ECB-encrypted picture (Fig.\ref{fig:pic_ecb}), we can see the edges of the graphics, which is almost the same as the original picture (Fig.\ref{fig:pic_original}).
 While from the CBC-encrypted picture (Fig.\ref{fig:pic_cbc}), we can hardly find any information.
 
 \begin{figure}[ht!]
@@ -131,13 +131,12 @@ While from the CBC-encrypted picture (Fig.\ref{fig:pic_cbc}), we can hardly find
 \textbf{Explanation.}
 In ECB mode (Fig.\ref{fig:ECB_encryption}), blocks of plaintext are encrypted using a block cipher under the same key. 
 Then the blocks of ciphertext are concatenated to be the output.
+
 Since the keyed block cipher is a deterministic function, the same blocks of plaintext was mapped to the same ciphertext.
 Additionally, the diversity of blocks in the picture was really low.
-Consequently, the colour information, which is based on a series of continuous bytes, was lost; while the shape information, which relies on the difference between several near blocks, was almost completely preserved. 
+Consequently, the colour information, which is based on a series of consecutive bytes, was lost; while the shape information, which relies on the difference between several near blocks, was almost entirely preserved. 
 
 In CBC mode (Fig.\ref{fig:CBC_encryption}), each block of plaintext is firstly XOR-ed with the previous block of ciphertext. Therefore, although the keyed block cipher is deterministic, identical blocks are XOR-ed with different values and thus encoded as different ciphertext. So the shape information was also well hidden. 
-
-The two examples also show that block cipher in CBC mode has a better property of diffusion than that in ECB mode.
 
 \begin{figure}[ht!]
 \centering
@@ -165,7 +164,7 @@ AES-128-CBC is used for this section. Screenshot of the commands and outputs is 
 \end{figure}
 
 \textbf{Observation.}
-From the outputs, it can be seen that when encrypting the same message under the same key, different ciphertext are produced with different IVs, while reusing IV leads to the same ciphertext.
+From the outputs, it can be seen that when encrypting the same message under the same key, the different ciphertext is produced with different IVs, while reusing IV leads to the same ciphertext.
 
 \textbf{Explanation.}
 CPA-security requires that the encryption scheme must be probabilistic. 
@@ -174,7 +173,7 @@ A probabilistic function has to be able to get access to a randomness source.
 In the block cipher working in most modes of operation, IV (or counter in CTR mode) is the only source of randomness.
 Hence if we reuse the IV (or even the IV can be predicated in CBC mode), the probabilistic function falls back to a deterministic function in the $\mathsf{PrivK}^{\mathsf{cpa}}$ game.
 
-Therefore, in order to keep the encryption scheme producing different ciphertext for the same plaintext, IV can never be reused.
+Therefore, to keep the encryption scheme producing different ciphertext for the same plaintext, IV can never be reused.
 
 \subsubsection{}
 
