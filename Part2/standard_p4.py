@@ -1,8 +1,10 @@
+from binascii import hexlify
+from os import urandom
+
 from Cryptodome.Cipher import DES
 from Cryptodome.Util.Padding import pad
-from os import urandom
+
 from p4_e0446373 import EncryptionOracle
-from binascii import hexlify
 
 key = urandom(DES.key_size)
 

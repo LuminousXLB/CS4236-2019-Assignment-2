@@ -110,7 +110,7 @@ class PaddingOracleAttack:
             self.p_text.insert(0, revealed_byte)
 
         # remove the padding and return the plaintext
-        return bytes(self.p_text[:-self.p_text[-1]])
+        return bytes(self.p_text)
 
     def probe_padding_length(self) -> int:
         """probe the padding length by trying modifying bytes one by one
@@ -209,4 +209,4 @@ if __name__ == "__main__":
     ))
 
     # print the result
-    print(plaintext.decode('ascii'))
+    print(plaintext[:-plaintext[-1]].decode('ascii'))
