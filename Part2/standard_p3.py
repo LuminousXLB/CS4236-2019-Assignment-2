@@ -16,7 +16,7 @@ class PaddingOracle:
 
     def __call__(self, block0: bytes, block1: bytes) -> bytes:
         assert len(block0) == DES.block_size
-        # assert len(block1) == DES.block_size
+        assert len(block1) == DES.block_size
 
         cipher = DES.new(key, DES.MODE_CBC, block0)
         decrypt = cipher.decrypt(block1)
