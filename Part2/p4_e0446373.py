@@ -141,7 +141,7 @@ if __name__ == "__main__":
     HOST = "localhost"
     PORT = 5000
 
-    f = open("oracle/port", "r")
+    f = open("port", "r")
     lines = f.readlines()
     PORT = int(lines[0].strip())
 
