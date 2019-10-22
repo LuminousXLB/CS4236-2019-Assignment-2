@@ -30,13 +30,15 @@ if __name__ == "__main__":
         encora = EncryptionOracle(DES.block_size, DecryptionOracle())
         cip = encora(message)
         cipher = DES.new(key, DES.MODE_CBC, cip[0])
-        cip2 = cipher.encrypt(pad(message, DES.block_size))
+        dec = cipher.decrypt(b''.join(cip[1:]))
 
-        if b''.join(cip[1:]) == cip2:
+        if pad(message, DES.block_size) == dec:
             print('[PASS] message length: ', l)
         else:
             print('[FAIL] message length: ', l)
+            cip2 = cipher.encrypt(pad(message, DES.block_size))
             print([hexlify(x) for x in cip])
-            print([hexlify(x) for x in [cip[0]] + [cip2[base:base+DES.block_size]
-                                                   for base in range(0, len(cip2), DES.block_size)]])
+            print([hexlify(x) for x in [cip[0]] + [
+                cip2[base:base+DES.block_size] for base in range(0, len(cip2), DES.block_size)
+            ]])
             exit(-1)
